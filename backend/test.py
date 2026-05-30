@@ -1,32 +1,26 @@
-from crypto.keygen import generate_keys
 from crypto.encryption import encrypt_message
 from crypto.decryption import decrypt_message
 
+p = 212123585328088672567285756060968609017
+g = 3
+y = 210115104279602974102087901695141143557
+x = 43412256668853100349837655730863918041
 
-# Generate keys
-keys = generate_keys(23, 5, 6)
+M = 1410450877551
 
-public_key = keys["public_key"]
-private_key = keys["private_key"]
+enc = encrypt_message(p, g, y, M)
 
-# Encrypt
-encrypted = encrypt_message(
-    p=public_key["p"],
-    g=public_key["g"],
-    y=public_key["y"],
-    message=10,
-    k=3
+cipher = enc["ciphertext"]
+
+dec = decrypt_message(
+    p,
+    x,
+    cipher["c1"],
+    cipher["c2"]
 )
 
-cipher = encrypted["ciphertext"]
+print("Original:", M)
+print("Recovered:", dec["message"])
+# from encoding.message_encoder import blocks_to_text
 
-# Decrypt
-decrypted = decrypt_message(
-    p=public_key["p"],
-    x=private_key,
-    c1=cipher["c1"],
-    c2=cipher["c2"]
-)
-
-print("Original:", 10)
-print("Recovered:", decrypted["message"])
+# print(blocks_to_text([1410450877551]))

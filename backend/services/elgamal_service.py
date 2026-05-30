@@ -27,6 +27,7 @@ def full_encrypt(message_text, public_key):
     trace_steps = []
 
     # Encrypt every block separately
+    print("Original Blocks:", numeric_blocks)
     for index, block in enumerate(numeric_blocks):
 
         encrypted = encrypt_message(
@@ -49,6 +50,8 @@ def full_encrypt(message_text, public_key):
             "ephemeral_key": encrypted["ephemeral_key"],
             "shared_secret": encrypted["shared_secret"]
         })
+        print("ENCRYPT PUBLIC KEY")
+        print(public_key)
 
     return {
         "original_text": message_text,
@@ -59,6 +62,8 @@ def full_encrypt(message_text, public_key):
 
         "trace_steps": trace_steps
     }
+
+
 def full_decrypt(ciphertext_blocks, private_key, p):
 
     recovered_blocks = []
@@ -88,9 +93,20 @@ def full_decrypt(ciphertext_blocks, private_key, p):
         })
 
     # Convert integer blocks → text
+    print("Recovered Blocks:", recovered_blocks)
     recovered_text = blocks_to_text(
         recovered_blocks
     )
+    
+    print("Recovered blocks:", recovered_blocks)
+    for block in recovered_blocks:
+        print("Block < p ?", block < p)
+    print()
+
+    print("DECRYPT INPUT")
+    print("p =", p)
+    print("x =", private_key)
+    print("ciphertext_blocks =", ciphertext_blocks)
 
     return {
         "recovered_text": recovered_text,
