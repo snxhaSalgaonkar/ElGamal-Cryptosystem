@@ -20,7 +20,11 @@ def full_encrypt(message_text, public_key):
     y = public_key["y"]
 
     # Convert text → multiple integer blocks
-    numeric_blocks = text_to_blocks(message_text, p)
+    # Bypass text encoding if input is raw numeric integer or if modulus is too small (Toy Mode)
+    if isinstance(message_text, int) or (isinstance(message_text, str) and message_text.isdigit() and p < 256):
+        numeric_blocks = [int(message_text)]
+    else:
+        numeric_blocks = text_to_blocks(message_text, p)
 
     ciphertext_blocks = []
 
@@ -94,9 +98,13 @@ def full_decrypt(ciphertext_blocks, private_key, p):
 
     # Convert integer blocks → text
     print("Recovered Blocks:", recovered_blocks)
-    recovered_text = blocks_to_text(
-        recovered_blocks
-    )
+    # Bypass byte decoding if we are using small toy prime parameters
+    if p < 256:
+        recovered_text = str(recovered_blocks[0]) if recovered_blocks else ""
+    else:
+        recovered_text = blocks_to_text(
+            recovered_blocks
+        )
     
     print("Recovered blocks:", recovered_blocks)
     for block in recovered_blocks:
