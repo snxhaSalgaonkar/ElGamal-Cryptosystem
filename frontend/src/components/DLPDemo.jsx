@@ -258,7 +258,7 @@ export default function DLPDemo() {
               In regular modular arithmetic, checking if $g^x \equiv y \pmod p$ is trivial using fast modular exponentiation (takes $O(\log x)$ time).
             </p>
             <p style={{ marginTop: '0.5rem' }}>
-              However, the inverse operation (finding $x$ given $g$ and $y$) has no known polynomial-time classical algorithm. The values of $g^x \bmod p$ jump around in a seemingly random, chaotic fashion across the multiplicative group $\mathbb{Z}_p^*$.
+              However, the inverse operation (finding $x$ given $g$ and $y$) has no known polynomial-time classical algorithm. The values of $g^x \bmod p$ jump around in a seemingly random, chaotic fashion across the multiplicative group Z<sub>p</sub><sup>*</sup>.
             </p>
           </div>
           <div>

@@ -23,33 +23,44 @@ def get_prime_factors(n):
     return factors
 
 def is_primitive_root(g, p):
-    """Check g generates full group Z_p* — order of g must equal p-1"""
+    """Check g generates full group Z_p* — order of g must equal p-1."""
     if g <= 1 or g >= p:
         return False
-        
+
+    # Large moduli: use safe-prime test (secure mode uses generate_safe_prime)
+    if p >= 10_000:
+        return pow(g, (p - 1) // 2, p) == p - 1
+
     phi = p - 1
     factors = get_prime_factors(phi)
-    
-    # Check g^((p-1)/q) mod p for each prime factor q
+
     for q in factors:
         if pow(g, phi // q, p) == 1:
             return False
-            
+
     return True
 
 def find_primitive_root(p):
-    """Find smallest valid generator for prime p"""
+    """Find a valid generator for prime p (fast for large safe primes)."""
     if p <= 1:
         return None
     if p == 2:
         return 1
-        
-    # Iterate through possible generators starting from 2
-    for g in range(2, p):
-        if is_primitive_root(g, p):
+
+    # Toy / small primes: exhaustive search is fine
+    if p < 10_000:
+        for g in range(2, p):
+            if is_primitive_root(g, p):
+                return g
+        return None
+
+    # Large primes (e.g. 128–512 bit safe primes from generate_safe_prime):
+    # g is a primitive root mod safe prime p = 2q+1 iff g^((p-1)/2) ≡ -1 (mod p)
+    for g in range(2, 256):
+        if pow(g, (p - 1) // 2, p) == p - 1:
             return g
-            
-    return None
+
+    raise ValueError(f"Could not find a primitive root modulo p (bit length {p.bit_length()})")
 
 # --- Example Usage ---
 if __name__ == "__main__":

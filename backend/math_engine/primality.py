@@ -63,6 +63,21 @@ def generate_prime(bits):
         if miller_rabin(n):
             return n
 
+
+def generate_safe_prime(bits):
+    """
+    Generate a safe prime p = 2q + 1 where q is also prime.
+    Used for secure ElGamal so a generator can be found in O(1) time.
+    """
+    if bits < 4:
+        raise ValueError("Safe prime size must be at least 4 bits.")
+
+    while True:
+        q = generate_prime(bits - 1)
+        p = 2 * q + 1
+        if p.bit_length() == bits and miller_rabin(p):
+            return p
+
 # Example Usage:
 if __name__ == "__main__":
     bit_length = 8

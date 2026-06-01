@@ -1,251 +1,192 @@
-import React, { useState } from 'react';
-import { 
-  Key, 
-  Lock, 
-  Unlock, 
-  Zap, 
-  Sparkles, 
-  ShieldAlert, 
-  BookOpen, 
-  Cpu, 
-  LockKeyhole 
+import React, { useState, useEffect } from 'react';
+import {
+  LockKeyhole,
+  BookOpen,
+  Rocket,
+  ChevronDown,
+  Key,
+  Lock,
+  Unlock,
+  Zap,
+  Sparkles,
+  ShieldAlert,
 } from 'lucide-react';
 
-// Import our custom functional modules
-import KeyGenPanel from './components/KeyGenPanel';
-import EncryptPanel from './components/EncryptPanel';
-import DecryptPanel from './components/DecryptPanel';
+import CryptoWizard from './components/CryptoWizard';
 import DLPDemo from './components/DLPDemo';
 import ProbabilisticDemo from './components/ProbabilisticDemo';
 import EphemeralDanger from './components/EphemeralDanger';
+import { getApiBase, apiPost } from './api/client';
 
-const API_BASE = "http://127.0.0.1:5000";
+const API_BASE = getApiBase();
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState('keygen');
-  
-  // Shared cryptographic parameter states
-  const [keys, setKeys] = useState({
+  const [view, setView] = useState('home'); // 'home' | 'wizard'
+  const [activeLab, setActiveLab] = useState('dlp');
+  const [labKeys, setLabKeys] = useState({
     p: null,
     g: null,
     y: null,
     x: null,
-    mode: 'toy'
+    mode: 'toy',
   });
 
-  // Shared ciphertext buffer to ease transitions from Encryptor to Decryptor
-  const [ciphertextData, setCiphertextData] = useState({
-    ciphertext_blocks: null,
-    p: null,
-    g: null,
-    y: null
-  });
+  useEffect(() => {
+    if (view !== 'home') return;
+    apiPost('/api/keygen', { mode: 'toy' })
+      .then((data) => {
+        if (data.public_key) {
+          setLabKeys({
+            p: data.public_key.p,
+            g: data.public_key.g,
+            y: data.public_key.y,
+            x: data.private_key,
+            mode: 'toy',
+          });
+        }
+      })
+      .catch(() => {});
+  }, [view]);
 
-  const renderActiveContent = () => {
-    switch (activeTab) {
-      case 'keygen':
-        return (
-          <KeyGenPanel 
-            keys={keys} 
-            setKeys={setKeys} 
-            apiBase={API_BASE} 
-          />
-        );
-      case 'encrypt':
-        return (
-          <EncryptPanel 
-            keys={keys} 
-            ciphertextData={ciphertextData}
-            setCiphertextData={setCiphertextData}
-            apiBase={API_BASE} 
-            setActiveTab={setActiveTab}
-          />
-        );
-      case 'decrypt':
-        return (
-          <DecryptPanel 
-            keys={keys} 
-            ciphertextData={ciphertextData} 
-            apiBase={API_BASE} 
-          />
-        );
-      case 'dlp':
-        return <DLPDemo />;
-      case 'probabilistic':
-        return (
-          <ProbabilisticDemo 
-            keys={keys} 
-            apiBase={API_BASE} 
-          />
-        );
-      case 'keyreuse':
-        return (
-          <EphemeralDanger 
-            keys={keys} 
-            apiBase={API_BASE} 
-          />
-        );
-      default:
-        return (
-          <KeyGenPanel 
-            keys={keys} 
-            setKeys={setKeys} 
-            apiBase={API_BASE} 
-          />
-        );
-    }
+  const scrollToLearn = () => {
+    document.getElementById('learn-section')?.scrollIntoView({ behavior: 'smooth' });
   };
 
-  const isKeyActive = keys.p !== null;
+  if (view === 'wizard') {
+    return (
+      <CryptoWizard
+        apiBase={API_BASE}
+        onBackToHome={() => setView('home')}
+      />
+    );
+  }
 
   return (
-    <div className="app-container">
-      {/* Sidebar Navigation */}
-      <aside className="app-sidebar" id="app-sidebar-container">
-        <div className="brand-section">
-          <div className="brand-icon">
-            <LockKeyhole size={20} />
-          </div>
-          <h1 className="brand-title">ElGamal Portal</h1>
+    <div className="landing-page">
+      <section className="hero-container">
+        <div className="hero-badge">
+          <LockKeyhole size={16} />
+          Discrete Log Cryptography
+        </div>
+        <h1 className="hero-title">ElGamal Cryptosystem</h1>
+        <p className="hero-subtitle">
+          Learn public-key encryption with toy parameters you can trace by hand,
+          or secure primes for real UTF-8 messages — one guided workflow from keys to recovery.
+        </p>
+        <div className="hero-actions">
+          <button type="button" className="btn btn-secondary" onClick={scrollToLearn}>
+            <BookOpen size={18} />
+            Learn &amp; Explore
+          </button>
+          <button
+            type="button"
+            id="hero-get-started-btn"
+            className="btn btn-primary"
+            onClick={() => setView('wizard')}
+          >
+            <Rocket size={18} />
+            Get Started Wizard
+          </button>
+        </div>
+        <button type="button" className="scroll-indicator" onClick={scrollToLearn} aria-label="Scroll to learn">
+          <span>Scroll to learn</span>
+          <ChevronDown size={20} className="scroll-icon-animated" />
+        </button>
+      </section>
+
+      <div className="section-divider" />
+
+      <section id="learn-section" className="learn-section-container">
+        <h2 className="section-title">Learn ElGamal</h2>
+        <p className="section-subtitle">
+          Key generation, encryption, and decryption — then dive into security labs.
+        </p>
+
+        <div className="interactive-cards-grid">
+          <article className="concept-card">
+            <div className="concept-card-icon">
+              <Key size={24} />
+            </div>
+            <h3 className="concept-card-title">Key Generation</h3>
+            <p className="concept-card-desc">
+              Bob picks private x, publishes y ≡ gˣ mod p with public p and g.
+            </p>
+            <span className="concept-card-action" onClick={() => setView('wizard')}>
+              Try in wizard →
+            </span>
+          </article>
+
+          <article className="concept-card green-theme">
+            <div className="concept-card-icon">
+              <Lock size={24} />
+            </div>
+            <h3 className="concept-card-title">Asymmetric Encryption</h3>
+            <p className="concept-card-desc">
+              Alice uses random k to produce (c₁, c₂) with semantic security.
+            </p>
+            <span className="concept-card-action" onClick={() => setView('wizard')}>
+              Try in wizard →
+            </span>
+          </article>
+
+          <article className="concept-card amber-theme">
+            <div className="concept-card-icon">
+              <Unlock size={24} />
+            </div>
+            <h3 className="concept-card-title">Decryption</h3>
+            <p className="concept-card-desc">
+              Bob recovers M using x, modular inverse, and block reconstruction.
+            </p>
+            <span className="concept-card-action" onClick={() => setView('wizard')}>
+              Try in wizard →
+            </span>
+          </article>
         </div>
 
-        <nav className="nav-menu">
-          <div className="nav-category">Mathematics & Setup</div>
-          <div 
-            id="nav-keygen-tab"
-            className={`nav-item ${activeTab === 'keygen' ? 'active' : ''}`}
-            onClick={() => setActiveTab('keygen')}
-          >
-            <Key size={18} className="nav-icon" />
-            <span>Key Generation</span>
-          </div>
+        <h2 className="section-title" style={{ fontSize: '1.75rem' }}>
+          Security Laboratories
+        </h2>
+        <p className="section-subtitle" style={{ marginBottom: '2rem' }}>
+          DLP hardness, probabilistic encryption, and ephemeral key reuse.
+        </p>
 
-          <div className="nav-category">Asymmetric Workflows</div>
-          <div 
-            id="nav-encrypt-tab"
-            className={`nav-item ${activeTab === 'encrypt' ? 'active' : ''}`}
-            onClick={() => setActiveTab('encrypt')}
+        <nav className="labs-navigation-bar">
+          <button
+            type="button"
+            className={`lab-nav-tab ${activeLab === 'dlp' ? 'active' : ''}`}
+            onClick={() => setActiveLab('dlp')}
           >
-            <Lock size={18} className="nav-icon" />
-            <span>Encryption Module</span>
-          </div>
-          <div 
-            id="nav-decrypt-tab"
-            className={`nav-item ${activeTab === 'decrypt' ? 'active' : ''}`}
-            onClick={() => setActiveTab('decrypt')}
+            <Zap size={16} style={{ display: 'inline', marginRight: 6 }} />
+            DLP Hardness
+          </button>
+          <button
+            type="button"
+            className={`lab-nav-tab ${activeLab === 'probabilistic' ? 'active warning-theme' : ''}`}
+            onClick={() => setActiveLab('probabilistic')}
           >
-            <Unlock size={18} className="nav-icon" />
-            <span>Decryption Module</span>
-          </div>
-
-          <div className="nav-category">Security Laboratories</div>
-          <div 
-            id="nav-dlp-tab"
-            className={`nav-item ${activeTab === 'dlp' ? 'active' : ''}`}
-            onClick={() => setActiveTab('dlp')}
+            <Sparkles size={16} style={{ display: 'inline', marginRight: 6 }} />
+            Probabilistic Security
+          </button>
+          <button
+            type="button"
+            className={`lab-nav-tab ${activeLab === 'keyreuse' ? 'active danger-theme' : ''}`}
+            onClick={() => setActiveLab('keyreuse')}
           >
-            <Zap size={18} className="nav-icon" />
-            <span>DLP Hardness Lab</span>
-          </div>
-          <div 
-            id="nav-probabilistic-tab"
-            className={`nav-item ${activeTab === 'probabilistic' ? 'active' : ''}`}
-            onClick={() => setActiveTab('probabilistic')}
-          >
-            <Sparkles size={18} className="nav-icon" />
-            <span>Probabilistic Security</span>
-          </div>
-          <div 
-            id="nav-keyreuse-tab"
-            className={`nav-item ${activeTab === 'keyreuse' ? 'active' : ''}`}
-            onClick={() => setActiveTab('keyreuse')}
-          >
-            <ShieldAlert size={18} className="nav-icon" />
-            <span>Key Reuse Threat</span>
-          </div>
+            <ShieldAlert size={16} style={{ display: 'inline', marginRight: 6 }} />
+            Key Reuse Threat
+          </button>
         </nav>
 
-        <div className="sidebar-footer">
-          <div>Discrete Log Cryptography</div>
-          <div style={{ fontSize: '0.75rem', marginTop: '0.2rem' }}>
-            Powered by <a href="https://react.dev" target="_blank" rel="noreferrer">React</a> + <a href="https://flask.palletsprojects.com" target="_blank" rel="noreferrer">Flask</a>
-          </div>
+        <div className="card glass-panel">
+          {activeLab === 'dlp' && <DLPDemo />}
+          {activeLab === 'probabilistic' && (
+            <ProbabilisticDemo keys={labKeys} apiBase={API_BASE} />
+          )}
+          {activeLab === 'keyreuse' && (
+            <EphemeralDanger keys={labKeys} apiBase={API_BASE} />
+          )}
         </div>
-      </aside>
-
-      {/* Main Panel Content */}
-      <main className="main-content">
-        <header className="page-header">
-          <div className="page-title-section">
-            <div>
-              <h1 id="page-primary-title">
-                {activeTab === 'keygen' && 'Key Configuration'}
-                {activeTab === 'encrypt' && 'Asymmetric Encrypter'}
-                {activeTab === 'decrypt' && 'Asymmetric Decrypter'}
-                {activeTab === 'dlp' && 'Complexity Theory: DLP'}
-                {activeTab === 'probabilistic' && 'Semantic Security'}
-                {activeTab === 'keyreuse' && 'Cryptographic Exploitation'}
-              </h1>
-              <p className="page-subtitle">
-                {activeTab === 'keygen' && 'Initialize prime parameters and exponent pairs.'}
-                {activeTab === 'encrypt' && 'Transform human-readable text into discrete logarithm cipher blocks.'}
-                {activeTab === 'decrypt' && 'Undo modular multiplications via EEA multiplicative modular inverses.'}
-                {activeTab === 'dlp' && 'Explore the exponential mathematical wall defending public-key cryptosystems.'}
-                {activeTab === 'probabilistic' && 'Examine how randomised ephemeral keys hide message frequencies.'}
-                {activeTab === 'keyreuse' && 'Simulate the catastrophic algebraic fallout of reusing single-use variables.'}
-              </p>
-            </div>
-          </div>
-        </header>
-
-        {/* Global Key Parameter Status Indicators */}
-        <section className="global-indicator-bar" id="global-status-indicator-bar">
-          <div className="indicator-card p-ind">
-            <span className="indicator-label">Modulus Prime (p)</span>
-            <div className="indicator-val" id="global-p-indicator">
-              {isKeyActive ? keys.p.toString() : 'Not Loaded'}
-            </div>
-            <span className="indicator-status">
-              {isKeyActive ? (keys.mode === 'toy' ? 'Toy mod 23' : 'Secure Large Prime') : 'Awaiting initialization'}
-            </span>
-          </div>
-
-          <div className="indicator-card g-ind">
-            <span className="indicator-label">Generator (g)</span>
-            <div className="indicator-val" id="global-g-indicator">
-              {isKeyActive ? keys.g.toString() : 'Not Loaded'}
-            </div>
-            <span className="indicator-status">
-              {isKeyActive ? 'Primitive root modulo p' : 'Awaiting initialization'}
-            </span>
-          </div>
-
-          <div className="indicator-card y-ind">
-            <span className="indicator-label">Public Key (y)</span>
-            <div className="indicator-val" id="global-y-indicator">
-              {isKeyActive ? keys.y.toString() : 'Not Loaded'}
-            </div>
-            <span className="indicator-status">
-              {isKeyActive ? 'y ≡ gˣ mod p' : 'Awaiting initialization'}
-            </span>
-          </div>
-
-          <div className="indicator-card x-ind">
-            <span className="indicator-label">Private Key (x)</span>
-            <div className="indicator-val" id="global-x-indicator" style={{ letterSpacing: isKeyActive ? '0.25em' : 'normal' }}>
-              {isKeyActive ? '••••••••' : 'Not Loaded'}
-            </div>
-            <span className="indicator-status">
-              {isKeyActive ? 'Secret exponent' : 'Awaiting initialization'}
-            </span>
-          </div>
-        </section>
-
-        {/* Render the Active Functional Module */}
-        <section style={{ position: 'relative' }}>
-          {renderActiveContent()}
-        </section>
-      </main>
+      </section>
     </div>
   );
 }

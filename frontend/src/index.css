@@ -65,6 +65,7 @@ body {
     radial-gradient(circle at 90% 80%, rgba(16, 185, 129, 0.04) 0%, transparent 45%);
 }
 
+
 button, input, select, textarea {
   font-family: inherit;
   color: inherit;
@@ -939,4 +940,476 @@ textarea.input-field {
   .global-indicator-bar {
     grid-template-columns: 1fr;
   }
+}
+
+/* ==========================================================================
+   LANDING PAGE HERO & MODERN PORTAL STYLES
+   ========================================================================== */
+
+html {
+  scroll-behavior: smooth;
+}
+
+.landing-page {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.hero-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 6rem 2rem 4rem 2rem;
+  position: relative;
+  min-height: 85vh;
+  background-image: 
+    radial-gradient(circle at 50% 30%, rgba(99, 102, 241, 0.08) 0%, transparent 60%);
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 9999px;
+  background: rgba(99, 102, 241, 0.08);
+  border: 1px solid rgba(99, 102, 241, 0.25);
+  color: #a5b4fc;
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  animation: float-slow 4s ease-in-out infinite alternate;
+}
+
+.hero-title {
+  font-size: 4rem;
+  font-weight: 800;
+  letter-spacing: -0.05em;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(135deg, #ffffff 20%, #a5b4fc 50%, #6366f1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,0.5));
+}
+
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 760px;
+  line-height: 1.6;
+  margin-bottom: 3rem;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 1.5rem;
+  width: 100%;
+  max-width: 480px;
+  justify-content: center;
+}
+
+.hero-actions .btn {
+  padding: 1rem 2rem;
+  font-size: 1rem;
+}
+
+/* Floating animation */
+@keyframes float-slow {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-8px); }
+}
+
+/* Scroll indicator */
+.scroll-indicator {
+  position: absolute;
+  bottom: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background: transparent;
+  border: none;
+  padding: 0.25rem 0.5rem;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.scroll-indicator:hover {
+  color: var(--text-secondary);
+  background: transparent;
+}
+
+.scroll-indicator:focus-visible {
+  outline: 2px solid rgba(99, 102, 241, 0.5);
+  outline-offset: 4px;
+  border-radius: 8px;
+}
+
+.scroll-icon-animated {
+  animation: bounce-slow 2s infinite;
+}
+
+@keyframes bounce-slow {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-6px); }
+  60% { transform: translateY(-3px); }
+}
+
+/* Learn Section & Grid Card Overrides */
+.section-divider {
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+  width: 100%;
+}
+
+.learn-section-container {
+  padding: 6rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.section-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  margin-bottom: 0.5rem;
+  text-align: center;
+}
+
+.section-subtitle {
+  color: var(--text-secondary);
+  text-align: center;
+  margin-bottom: 4rem;
+  font-size: 1.05rem;
+}
+
+.interactive-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+}
+
+.concept-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2rem;
+  cursor: pointer;
+  transition: transform var(--transition-smooth), border-color var(--transition-smooth), box-shadow var(--transition-smooth);
+  position: relative;
+  overflow: hidden;
+}
+
+.concept-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-glow);
+}
+
+.concept-card-icon {
+  margin-bottom: 1.5rem;
+  padding: 0.75rem;
+  background: rgba(99, 102, 241, 0.05);
+  border-radius: 12px;
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  display: inline-flex;
+  color: var(--color-primary);
+}
+
+.concept-card.green-theme .concept-card-icon {
+  color: var(--color-success);
+  background: rgba(16, 185, 129, 0.05);
+  border-color: rgba(16, 185, 129, 0.1);
+}
+
+.concept-card.amber-theme .concept-card-icon {
+  color: var(--color-warning);
+  background: rgba(245, 158, 11, 0.05);
+  border-color: rgba(245, 158, 11, 0.1);
+}
+
+.concept-card-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.concept-card-desc {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+
+.concept-card-action {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.concept-card.green-theme .concept-card-action {
+  color: var(--color-success);
+}
+
+.concept-card.amber-theme .concept-card-action {
+  color: var(--color-warning);
+}
+
+/* Labs Drawer styles */
+.labs-navigation-bar {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 1rem;
+}
+
+.lab-nav-tab {
+  padding: 0.75rem 1.5rem;
+  border-radius: 9999px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  cursor: pointer;
+  color: var(--text-secondary);
+  border: 1px solid transparent;
+  transition: var(--transition-fast);
+}
+
+.lab-nav-tab:hover {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.lab-nav-tab.active {
+  color: #fff;
+  background: var(--color-primary-glow);
+  border: 1px solid rgba(99, 102, 241, 0.3);
+}
+
+.lab-nav-tab.active.warning-theme {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+}
+
+.lab-nav-tab.active.danger-theme {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.3);
+  color: #fca5a5;
+}
+
+
+/* ==========================================================================
+   WIZARD TIMELINE & STEP STYLES
+   ========================================================================== */
+
+.wizard-page-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  width: 100%;
+}
+
+.wizard-header-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 3rem;
+}
+
+.back-home-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: var(--transition-fast);
+  background: none;
+  border: none;
+}
+
+.back-home-link:hover {
+  color: var(--text-primary);
+  transform: translateX(-3px);
+}
+
+/* Vertical timeline structure */
+.wizard-steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.wizard-step-card {
+  background: var(--bg-glass);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  padding: 2.25rem;
+  position: relative;
+  transition: all var(--transition-smooth);
+}
+
+.wizard-step-card.inactive {
+  opacity: 0.45;
+  filter: grayscale(0.5);
+  pointer-events: none;
+}
+
+.wizard-step-card.active {
+  opacity: 1;
+  border-color: var(--color-primary);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.05);
+}
+
+.wizard-step-card.completed {
+  opacity: 1;
+  border-color: var(--color-success-glow);
+  background: rgba(16, 16, 20, 0.85);
+}
+
+.step-badge-indicator {
+  position: absolute;
+  top: -12px;
+  left: 2rem;
+  background: var(--border-color);
+  color: var(--text-secondary);
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  border: 1px solid var(--border-color);
+  transition: all var(--transition-smooth);
+}
+
+.wizard-step-card.active .step-badge-indicator {
+  background: var(--color-primary);
+  color: #fff;
+  border-color: var(--color-primary);
+}
+
+.wizard-step-card.completed .step-badge-indicator {
+  background: var(--color-success);
+  color: #fff;
+  border-color: var(--color-success);
+}
+
+.wizard-step-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.wizard-step-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+.wizard-step-desc {
+  font-size: 0.95rem;
+  color: var(--text-secondary);
+  margin-top: 0.25rem;
+}
+
+.wizard-step-status-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 28px;
+  width: 28px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+.wizard-step-card.active .wizard-step-status-icon {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-primary-glow);
+}
+
+.wizard-step-card.completed .wizard-step-status-icon {
+  color: #fff;
+  border-color: var(--color-success);
+  background: var(--color-success);
+}
+
+/* Custom layout adjustments for smaller viewports on the landing page */
+@media (max-width: 900px) {
+  .hero-title {
+    font-size: 3rem;
+  }
+  .interactive-cards-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  .labs-navigation-bar {
+    flex-wrap: wrap;
+  }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.spinning-icon {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.trace-tag.red {
+  background: rgba(239, 68, 68, 0.15);
+  color: #fca5a5;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+/* Optional: vertical connector between wizard steps */
+.wizard-steps-timeline {
+  position: relative;
+  padding-left: 0.5rem;
+}
+
+.wizard-steps-timeline::before {
+  content: '';
+  position: absolute;
+  left: 2.75rem;
+  top: 2rem;
+  bottom: 2rem;
+  width: 2px;
+  background: linear-gradient(180deg, var(--border-color), var(--color-primary), var(--color-success));
+  opacity: 0.35;
+  z-index: 0;
+}
+
+.wizard-step-card {
+  position: relative;
+  z-index: 1;
 }

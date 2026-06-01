@@ -6,10 +6,18 @@ from services.elgamal_service import (
     full_decrypt
 )
 
-from math_engine.primality import generate_prime
+from math_engine.primality import generate_safe_prime
 from math_engine.primitive_root import find_primitive_root
+from utils.json_codec import to_int, stringify_large_ints
 
 api_bp = Blueprint("api", __name__)
+
+
+def _coerce_ciphertext_blocks(blocks):
+    return [
+        {"c1": to_int(b["c1"]), "c2": to_int(b["c2"])}
+        for b in blocks
+    ]
 
 
 # =========================================
@@ -33,9 +41,12 @@ def keygen():
         # SECURE MODE
         elif mode == "secure":
 
-            bits = data.get("bits", 512)
+            bits = int(data.get("bits", 256))
 
-            p = generate_prime(bits)
+            if bits not in (128, 256, 512):
+                return jsonify({"error": "bits must be 128, 256, or 512"}), 400
+
+            p = generate_safe_prime(bits)
 
             g = find_primitive_root(p)
 
@@ -49,7 +60,7 @@ def keygen():
         # Generate keys
         result = generate_keys(p, g, x)
 
-        return jsonify(result)
+        return jsonify(stringify_large_ints(result))
 
     except Exception as e:
 
@@ -70,9 +81,9 @@ def encrypt():
         message = data["message"]
 
         public_key = {
-            "p": data["p"],
-            "g": data["g"],
-            "y": data["y"]
+            "p": to_int(data["p"]),
+            "g": to_int(data["g"]),
+            "y": to_int(data["y"]),
         }
 
         result = full_encrypt(
@@ -80,7 +91,7 @@ def encrypt():
             public_key=public_key
         )
 
-        return jsonify({
+        return jsonify(stringify_large_ints({
 
             "original_text":
                 result["original_text"],
@@ -94,7 +105,7 @@ def encrypt():
             "trace_steps":
                 result["trace_steps"]
 
-        })
+        }))
 
     except Exception as e:
 
@@ -112,11 +123,11 @@ def decrypt():
     try:
         data = request.get_json()
 
-        ciphertext_blocks = data["ciphertext_blocks"]
+        ciphertext_blocks = _coerce_ciphertext_blocks(data["ciphertext_blocks"])
 
-        private_key = data["x"]
+        private_key = to_int(data["x"])
 
-        p = data["p"]
+        p = to_int(data["p"])
 
         result = full_decrypt(
             ciphertext_blocks=ciphertext_blocks,
@@ -124,7 +135,7 @@ def decrypt():
             p=p
         )
 
-        return jsonify({
+        return jsonify(stringify_large_ints({
 
             "recovered_text":
                 result["recovered_text"],
@@ -135,7 +146,7 @@ def decrypt():
             "trace_steps":
                 result["trace_steps"]
 
-        })
+        }))
 
     except Exception as e:
 
