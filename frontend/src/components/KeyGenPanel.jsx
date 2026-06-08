@@ -148,7 +148,9 @@ export default function KeyGenPanel({ keys, setKeys, apiBase }) {
           
           <div className="math-equation-banner">
             <span>Public Key Formula</span>
-            y = g<sup>x</sup> mod p
+            <div>
+              y = g<sup>x</sup> mod p &rArr; {keys.g.toString()}<sup>{showPrivateKey ? keys.x.toString() : 'x'}</sup> mod {keys.p.toString()} = <strong>{keys.y.toString()}</strong>
+            </div>
           </div>
 
           <div className="grid-2">
