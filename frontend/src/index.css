@@ -1378,6 +1378,10 @@ html {
   to { opacity: 1; transform: translateY(0); }
 }
 
+.animate-fadeIn {
+  animation: fadeIn 0.35s ease forwards;
+}
+
 .spinning-icon {
   animation: spin 1s linear infinite;
 }
@@ -1414,4 +1418,51 @@ html {
 .wizard-step-card {
   position: relative;
   z-index: 1;
+}
+
+/* ==========================================================================
+   RESPONSIVE SECURE CHAT OVERRIDES
+   ========================================================================== */
+
+.secure-chat-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 1.5rem;
+  margin-top: 1rem;
+}
+
+.secure-chat-keys-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.75rem;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+  .secure-chat-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+  .secure-chat-keys-container {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+  .wizard-page-container {
+    padding: 1.5rem 1rem;
+  }
+}
+
+/* Force legible colors on input fields on all mobile browsers */
+.input-field {
+  color: #ffffff !important;
+  background-color: #101014 !important;
+  border: 1px solid var(--border-color) !important;
+}
+
+.input-field:focus {
+  border-color: var(--color-primary) !important;
 }

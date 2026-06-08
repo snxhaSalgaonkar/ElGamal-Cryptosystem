@@ -10,18 +10,21 @@ import {
   Zap,
   Sparkles,
   ShieldAlert,
+  MessageSquare,
+  Wifi,
 } from 'lucide-react';
 
 import CryptoWizard from './components/CryptoWizard';
 import DLPDemo from './components/DLPDemo';
 import ProbabilisticDemo from './components/ProbabilisticDemo';
 import EphemeralDanger from './components/EphemeralDanger';
+import SecureChat from './components/SecureChat';
 import { getApiBase, apiPost } from './api/client';
 
 const API_BASE = getApiBase();
 
 export default function App() {
-  const [view, setView] = useState('home'); // 'home' | 'wizard'
+  const [view, setView] = useState('home'); // 'home' | 'wizard' | 'chat'
   const [activeLab, setActiveLab] = useState('dlp');
   const [labKeys, setLabKeys] = useState({
     p: null,
@@ -55,6 +58,15 @@ export default function App() {
   if (view === 'wizard') {
     return (
       <CryptoWizard
+        apiBase={API_BASE}
+        onBackToHome={() => setView('home')}
+      />
+    );
+  }
+
+  if (view === 'chat') {
+    return (
+      <SecureChat
         apiBase={API_BASE}
         onBackToHome={() => setView('home')}
       />
@@ -141,6 +153,33 @@ export default function App() {
               Try in wizard →
             </span>
           </article>
+        </div>
+
+        <h2 className="section-title" style={{ fontSize: '1.75rem', marginTop: '4rem' }}>
+          Real-Life Application
+        </h2>
+        <p className="section-subtitle">
+          Experience the power of ElGamal encryption in an active WiFi-linked messaging space.
+        </p>
+
+        <div className="card glass-panel" style={{ padding: '2.5rem', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '1.25rem', border: '1px solid rgba(139, 92, 246, 0.25)', background: 'linear-gradient(135deg, rgba(20, 10, 40, 0.6) 0%, rgba(10, 5, 20, 0.8) 100%)', borderRadius: '24px', marginBottom: '4rem', boxShadow: '0 20px 40px rgba(0, 0, 0, 0.4)' }}>
+          <div style={{ color: '#8b5cf6', display: 'inline-flex', padding: '1.25rem', borderRadius: '50%', backgroundColor: 'rgba(139, 92, 246, 0.1)' }}>
+            <MessageSquare size={36} />
+          </div>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800, color: '#fff', letterSpacing: '-0.02em' }}>
+            WiFi-Linked End-to-End Secure Chat
+          </h3>
+          <p style={{ maxWidth: '650px', color: 'var(--text-secondary)', fontSize: '0.975rem', lineHeight: 1.6 }}>
+            Run the server locally and connect another device (such as a smartphone or laptop) on the same WiFi network.
+            Both users generate their keys on-the-fly, exchange public keys automatically, and encrypt messages locally.
+            The server only processes and relays ciphertext blocks, demonstrating true zero-knowledge secure communication!
+          </p>
+          <div style={{ display: 'flex', gap: '1rem', marginTop: '0.5rem' }}>
+            <button className="btn btn-primary" id="launch-chat-btn" onClick={() => setView('chat')} style={{ padding: '0.75rem 2.5rem' }}>
+              <Wifi size={16} style={{ display: 'inline', marginRight: 8 }} />
+              Launch Secure Chat Room
+            </button>
+          </div>
         </div>
 
         <h2 className="section-title" style={{ fontSize: '1.75rem' }}>
