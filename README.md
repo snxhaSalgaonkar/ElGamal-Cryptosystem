@@ -2,9 +2,12 @@
 
 An interactive learning application for the **ElGamal public-key cryptosystem**. Explore key generation, encryption, and decryption with step-by-step modular arithmetic traces, toy parameters you can verify by hand, and secure primes for real UTF-8 messages—all grounded in the **Discrete Logarithm Problem (DLP)**.
 
+**🚀 [Live Demo](https://el-gamal-cryptosystem-i4ki0kv2x-snxhasalgaonkars-projects.vercel.app)**
+
 ## Features
 
 ### Landing page
+
 - **Hero** with guided entry points: *Learn & Explore* and *Get Started Wizard*
 - **Learn section** with concept cards for key generation, encryption, and decryption
 - **Security laboratories** (tabbed):
@@ -13,12 +16,14 @@ An interactive learning application for the **ElGamal public-key cryptosystem**.
   - **Key Reuse Threat** — why reusing ephemeral keys breaks security
 
 ### Interactive wizard (4 steps)
+
 1. **Parameters & message** — Toy mode (`p = 23`, integer message) or Secure mode (128 / 256 / 512-bit safe primes, UTF-8 text)
 2. **Key generation** — public `(p, g, y)` and private `x`, with optional private-key reveal
 3. **Encryption** — block chunking, ephemeral key `k`, ciphertext `(c₁, c₂)`, full math trace
 4. **Decryption** — shared secret recovery, modular inverse (EEA), plaintext recovery
 
 ### Backend
+
 - Miller–Rabin primality testing and **safe prime** generation for secure mode
 - Fast primitive-root discovery for large moduli
 - Message encoding/decoding for multi-character strings
@@ -96,7 +101,7 @@ cd frontend
 npm run dev
 ```
 
-Open **http://localhost:5173** in your browser.
+Open **<http://localhost:5173>** in your browser.
 
 > **Note:** Secure key generation (especially 512-bit) may take several seconds. Ensure Flask is running before using the wizard; otherwise the UI will show a connection error.
 
