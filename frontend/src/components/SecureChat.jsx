@@ -96,12 +96,12 @@ export default function SecureChat({ apiBase, onBackToHome }) {
     };
   }, [inRoom, roomId, username, keys]);
 
-  // 3. Scroll to bottom on new messages
+  // 3. Scroll to bottom ONLY when message count changes
   useEffect(() => {
-    if (inRoom) {
+    if (inRoom && messages.length > 0) {
       messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }
-  }, [messages, inRoom]);
+  }, [messages.length, inRoom]);
 
   // Handle Leave Room proactively when navigating away
   useEffect(() => {
@@ -616,7 +616,7 @@ export default function SecureChat({ apiBase, onBackToHome }) {
 
             {/* Active Chat Bubble Screen */}
             <div className="card glass-panel" style={{ height: '400px', display: 'flex', flexDirection: 'column', justifyContent: 'space-between', padding: '1.25rem' }}>
-              <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', paddingRight: '0.5rem', marginBottom: '1rem' }}>
+              <div style={{ flex: 1, overflowY: 'auto', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch', display: 'flex', flexDirection: 'column', gap: '1rem', paddingRight: '0.5rem', marginBottom: '1rem' }}>
                 {messages.length === 0 ? (
                   <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', height: '100%', color: 'var(--text-muted)', textAlign: 'center', gap: '0.75rem' }}>
                     <Lock size={32} style={{ opacity: 0.3 }} />
@@ -772,7 +772,7 @@ export default function SecureChat({ apiBase, onBackToHome }) {
                 </p>
               </div>
             ) : (
-              <div style={{ flex: 1, overflowY: 'auto', fontSize: '0.825rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease' }}>
+              <div style={{ flex: 1, overflowY: 'auto', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch', fontSize: '0.825rem', display: 'flex', flexDirection: 'column', gap: '1.25rem', animation: 'fadeIn 0.2s ease' }}>
                 {/* Basic Metadata */}
                 <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem', padding: '0.75rem', background: 'rgba(255, 255, 255, 0.02)', border: '1px solid rgba(255, 255, 255, 0.04)', borderRadius: '10px' }}>
                   <div>
@@ -914,7 +914,7 @@ export default function SecureChat({ apiBase, onBackToHome }) {
             Below is a live rendering of what is actually recorded in the Flask backend's in-memory room database. Observe that the server only tracks ciphertext numbers and has no access to the private exponents (<code>x</code>) or the decoded message plaintext.
           </p>
 
-          <div style={{ background: '#020617', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '1rem', height: '180px', overflowY: 'auto', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#10b981' }}>
+          <div style={{ background: '#020617', border: '1px solid rgba(255, 255, 255, 0.05)', borderRadius: '12px', padding: '1rem', height: '180px', overflowY: 'auto', scrollBehavior: 'smooth', WebkitOverflowScrolling: 'touch', fontFamily: 'var(--font-mono)', fontSize: '0.75rem', color: '#10b981' }}>
             {serverDbView ? (
               <div>
                 <div style={{ color: '#64748b', marginBottom: '0.5rem' }}>// Server Database State for Room: {roomId}</div>
